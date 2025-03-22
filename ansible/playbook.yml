@@ -60,6 +60,11 @@
         - xterm
         - spice-vdagent
         - mesa-utils
+- name: "glmark2: install glmark2"
+  tags: glmark2
+  hosts: wine_hosts
+  become: true
+  tasks:
     - name: "Get info about the latest release of andzuc/debian-glmark2"
       ansible.builtin.uri:
         url: "https://api.github.com/repos/andzuc/debian-glmark2/releases/latest"
@@ -76,19 +81,36 @@
         dest: "/tmp/debian-glmark2-latest.tar.gz"
         mode: "0644"
       when: release_info.json.assets | length > 0
-    - name: "Ensure destination directory exists"
+    - name: "Ensure temporary extraction directory exists"
       ansible.builtin.file:
-        path: "/opt/glmark2"
+        path: "/tmp/glmark2_extract"
         state: directory
         mode: "0755"
         owner: root
         group: root
       when: release_info.json.assets | length > 0
-    - name: "Extract the downloaded asset"
+    - name: "Extract the downloaded asset to temporary directory"
       ansible.builtin.unarchive:
         src: "/tmp/debian-glmark2-latest.tar.gz"
-        dest: "/opt/glmark2"
+        dest: "/tmp/glmark2_extract"
         remote_src: yes
+        mode: "0755"
+        owner: root
+        group: root
+      when: release_info.json.assets | length > 0
+    - name: "Move glmark2 executable to desired location"
+      ansible.builtin.copy:
+        src: "/tmp/glmark2_extract/glmark2"
+        dest: "/opt"
+        mode: "0755"
+        owner: root
+        group: root
+        remote_src: yes
+      when: release_info.json.assets | length > 0
+    - name: "Clean up temporary extraction directory"
+      ansible.builtin.file:
+        path: "/tmp/glmark2_extract"
+        state: absent
       when: release_info.json.assets | length > 0
 - name: "Wine: install wine"
   tags: wine

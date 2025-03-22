@@ -79,7 +79,7 @@ Vagrant.configure("2") do |config|
     machine = machines["main"]
     main.vm.box = "andreazuccherelli/debian-stable"
     main.vm.box_architecture = "amd64"
-    main.vm.hostname = machine["ame"]
+    main.vm.hostname = machine["name"]
     main.vm.synced_folder '.', '/vagrant', disabled: true
     main.vm.network :public_network,
                     :ip => machine["ip"],

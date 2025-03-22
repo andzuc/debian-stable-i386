@@ -1,18 +1,18 @@
 ---
-- name: "vars: show variables"
+- name: "Ping: check all hosts"
+  tags: ping
+  hosts: all
+  tasks:
+    - name: "ping"
+      ansible.builtin.ping:
+- name: "Vars: show variables"
   tags: vars
   hosts: all
   gather_facts: false
   tasks:
     - debug:
         var: vars
-- name: "ping: check all hosts"
-  tags: ping
-  hosts: all
-  tasks:
-    - name: "ping"
-      ansible.builtin.ping:
-- name: "agents: install QEMU and SPICE agents"
+- name: "Agents: install QEMU and SPICE agents"
   tags: agents
   hosts: wine_hosts
   become: true
@@ -35,7 +35,7 @@
         state: started
       with_items:
         - qemu-guest-agent
-- name: "x11: install X server"
+- name: "X11: install X server"
   tags: x11
   hosts: wine_hosts
   become: true
@@ -60,13 +60,42 @@
         - xterm
         - spice-vdagent
         - mesa-utils
-        - glmark2-x11
-- name: "wine: install wine"
+    - name: "Get info about the latest release of andzuc/debian-glmark2"
+      ansible.builtin.uri:
+        url: "https://api.github.com/repos/andzuc/debian-glmark2/releases/latest"
+        return_content: yes
+      delegate_to: controller
+      register: release_info
+    - name: "Debug release info"
+      ansible.builtin.debug:
+        var: release_info.json
+      when: release_info.json is defined
+    - name: "Download the latest release asset"
+      ansible.builtin.get_url:
+        url: "{{ release_info.json.assets | selectattr('name', 'match', '.*\\.tar\\.gz') | map(attribute='browser_download_url') | first }}"
+        dest: "/tmp/debian-glmark2-latest.tar.gz"
+        mode: "0644"
+      when: release_info.json.assets | length > 0
+    - name: "Ensure destination directory exists"
+      ansible.builtin.file:
+        path: "/opt/glmark2"
+        state: directory
+        mode: "0755"
+        owner: root
+        group: root
+      when: release_info.json.assets | length > 0
+    - name: "Extract the downloaded asset"
+      ansible.builtin.unarchive:
+        src: "/tmp/debian-glmark2-latest.tar.gz"
+        dest: "/opt/glmark2"
+        remote_src: yes
+      when: release_info.json.assets | length > 0
+- name: "Wine: install wine"
   tags: wine
   hosts: wine_hosts
   roles:
     - name: ansible-role-wine
-- name: "wine: setup demo"
+- name: "Wine: setup demo"
   # Installs: numb res by Carillon & Cyberiad (https://www.pouet.net/prod.php?which=56900)
   tags: demo
   hosts: wine_hosts

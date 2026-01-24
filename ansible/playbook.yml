@@ -25,9 +25,19 @@
     - name: Aggiunge architettura i386 (solo se manca)
       ansible.builtin.command: dpkg --add-architecture i386
       when: "'i386' not in foreign_archs.stdout_lines"
-      become: yes
+      become: true
     - name: Aggiorna apt cache dopo aver aggiunto i386
       ansible.builtin.apt:
-        update_cache: yes
+        update_cache: true
       when: ansible_facts['pkg_mgr'] == 'apt'
-      become: yes
+      become: true
+- name: Install syslinux multiarch for 32-bit boot support
+  ansible.builtin.apt:
+    name:
+      - syslinux:i386          # contains the actual 32-bit boot binaries: syslinux.bin, isolinux.bin, ldlinux.c32...
+      - syslinux-common        # shared files: menu.c32, vesamenu.c32, etc. (architecture-independent)
+      - mtools                 # needed to write to FAT filesystems from Linux
+      - parted
+    state: present
+    update_cache: true
+  become: true

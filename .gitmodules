@@ -1,3 +1,0 @@
-[submodule "ansible/roles/ansible-role-wine"]
-	path = ansible/roles/ansible-role-wine
-	url = https://github.com/EA31337/ansible-role-wine.git

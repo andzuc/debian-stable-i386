@@ -1,14 +1,12 @@
-title = 'debian-wine'
-
 machines = {
   "controller" => {
     "name" => "controller" ,
-    "ip" => "172.20.1.254",
+    "ip" => "172.21.1.254",
     "netmask" => "255.255.255.0"
   },
   "main" => {
-    "name" => "main" ,
-    "ip" => "172.20.1.2",
+    "name" => "debian-stable-x86" ,
+    "ip" => "172.21.1.2",
     "netmask" => "255.255.255.0"
   }
 }
@@ -36,7 +34,7 @@ Vagrant.configure("2") do |config|
               }
             },
             "extra_hosts" => [
-              "main=#{machines["main"]["ip"]}"
+              "#{machines["main"]["name"]}=#{machines["main"]["ip"]}"
             ]
           }
         },
@@ -45,6 +43,7 @@ Vagrant.configure("2") do |config|
             "driver" => "bridge"
           },
           "intnet" => {
+            "name" => "intnet",
             "driver" => "bridge",
             "driver_opts" => {
               "com.docker.network.bridge.name" => "intnet"
@@ -52,7 +51,7 @@ Vagrant.configure("2") do |config|
             "ipam" => {
               "config" => [
                 {
-                  "subnet" => "172.20.1.0/24"
+                  "subnet" => "#{ENV['INTNET']}"
                 }
               ]
             }
@@ -90,15 +89,13 @@ Vagrant.configure("2") do |config|
 
     main.vm.provider :libvirt do |libvirt|
       libvirt.driver = 'kvm'
-      libvirt.title = title
+      libvirt.title = machine['name']
       libvirt.memory = 2048
       libvirt.cpus = 4
-      # Configurazione grafica
-      libvirt.graphics_type = 'spice'          # SPICE per il display
-      libvirt.graphics_gl = true               # Abilita OpenGL per SPICE
-      libvirt.video_type = 'virtio'            # VirtIO-GPU per il video
-      #libvirt.video_type = 'qxl'
-      libvirt.video_accel3d = true             # Abilita accelerazione 3D
+      libvirt.graphics_type = 'spice'
+      libvirt.graphics_gl = false
+      libvirt.video_type = 'qxl'
+      libvirt.video_accel3d = false
       libvirt.channel :type => 'unix', :target_name => 'org.qemu.guest_agent.0', :target_type => 'virtio'
       libvirt.channel :type => 'spicevmc', :target_name => 'com.redhat.spice.0', :target_type => 'virtio'
     end

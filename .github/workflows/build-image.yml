@@ -52,7 +52,7 @@ jobs:
           touch build.log
           screen -L -Logfile build.log -DmS build-image ./bin/up &
           BUILDPID=$!
-          tail --pid=$BUILDPID -f sys.log
+          tail --pid=$BUILDPID -f build.log
           echo cat "${{ github.env }}"
           cat "${{ github.env }}"
       # - name: Build QEMU image

@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - '*'
+  workflow_dispatch:
 
 env:
   QEMU_ARCH: 'x86_64'

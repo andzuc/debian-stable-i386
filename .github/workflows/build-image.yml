@@ -54,7 +54,7 @@ jobs:
         shell: sudo -s -u runner source {0}
         run: |
           id
-          export INTNET="$INTNET"
+          export INTNET="${{ env.INTNET }}"
           vagrant plugin install vagrant-libvirt
           touch build.log
           screen -L -Logfile build.log -DmS build-image ./bin/up &

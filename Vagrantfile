@@ -11,6 +11,8 @@ machines = {
   }
 }
 
+puts "DEBUG: ENV['INTNET'] = '#{ENV['INTNET']}'"
+
 Vagrant.configure("2") do |config|
   config.vm.define :controller do |c|
     c.vm.synced_folder '.', '/vagrant', disabled: false

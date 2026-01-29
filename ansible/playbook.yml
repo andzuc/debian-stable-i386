@@ -9,10 +9,12 @@
       register: file_stat
     - ansible.builtin.debug:
         msg: |
-          File: {{ item.item }}
-          Owner: {{ item.stat.uid }}
-          Group: {{ item.stat.gid }}
-          Mode:  {{ item.stat.mode | int | format('%04o') }}
+          File:   {{ item.item }}
+          Owner:  {{ item.stat.pw_name | default('non trovato') }}
+          UID:    {{ item.stat.uid }}
+          Group:  {{ item.stat.gr_name | default('non trovato') }}
+          GID:    {{ item.stat.gid }}
+          Mode:   {{ '{:04o}'.format(item.stat.mode | int) }}
           Esiste: {{ item.stat.exists | default(false) }}
       loop: "{{ file_stat.results }}"
 - name: "Ping: check all hosts"

@@ -8,9 +8,13 @@
         - /vagrant/.vagrant/machines/main/libvirt/private_key
       register: file_stat
     - ansible.builtin.debug:
-        msg: "{{ item.item }} → owner: {{ item.stat.pw_name }}, mode: {{ item.stat.mode | int | format('%04o') }}"
+        msg: |
+          File: {{ item.item }}
+          Owner: {{ item.stat.pw_name | default('non trovato') }}
+          Group: {{ item.stat.gr_name | default('non trovato') }}
+          Mode:  {{ item.stat.mode | int | format('%04o') | default('N/A') }}
+          Esiste: {{ item.stat.exists | default(false) }}
       loop: "{{ file_stat.results }}"
-      when: item.stat.exists
 - name: "Ping: check all hosts"
   tags: ping
   hosts: all

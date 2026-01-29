@@ -10,9 +10,9 @@
     - ansible.builtin.debug:
         msg: |
           File: {{ item.item }}
-          Owner: {{ item.stat.pw_name | default('non trovato') }}
-          Group: {{ item.stat.gr_name | default('non trovato') }}
-          Mode:  {{ item.stat.mode | int | format('%04o') | default('N/A') }}
+          Owner: {{ item.stat.uid }}
+          Group: {{ item.stat.gid }}
+          Mode:  {{ item.stat.mode | int | format('%04o') }}
           Esiste: {{ item.stat.exists | default(false) }}
       loop: "{{ file_stat.results }}"
 - name: "Ping: check all hosts"

@@ -15,7 +15,9 @@ puts "DEBUG: ENV['INTNET'] = '#{ENV['INTNET']}'"
 
 Vagrant.configure("2") do |config|
   config.vm.define :controller do |c|
-    c.vm.synced_folder '.', '/vagrant', disabled: false
+    c.vm.synced_folder '.', '/vagrant', disabled: false,
+                       type: "rsync",
+                       rsync__args: ["--chown=1000:1000"]
 
     c.vm.provider :docker do |d|
       machine = machines["controller"]

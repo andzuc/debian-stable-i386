@@ -94,12 +94,8 @@ Vagrant.configure("2") do |config|
       libvirt.title = machine['name']
       libvirt.memory = 2048
       libvirt.cpus = 4
-      libvirt.graphics_type = 'spice'
-      libvirt.graphics_gl = false
-      libvirt.video_type = 'qxl'
-      libvirt.video_accel3d = false
+      libvirt.graphics_type = 'none'
       libvirt.channel :type => 'unix', :target_name => 'org.qemu.guest_agent.0', :target_type => 'virtio'
-      libvirt.channel :type => 'spicevmc', :target_name => 'com.redhat.spice.0', :target_type => 'virtio'
     end
   end
 end

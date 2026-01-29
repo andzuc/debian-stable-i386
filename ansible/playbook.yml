@@ -1,4 +1,15 @@
 ---
+- name: "Check permissions"
+  tasks:
+    - ansible.builtin.stat:
+        path: "{{ item }}"
+      loop:
+        - /vagrant/.vagrant/machines/main/libvirt/private_key
+      register: file_stat
+    - ansible.builtin.debug:
+        msg: "{{ item.item }} → owner: {{ item.stat.pw_name }}, mode: {{ item.stat.mode | int | format('%04o') }}"
+      loop: "{{ file_stat.results }}"
+      when: item.stat.exists
 - name: "Ping: check all hosts"
   tags: ping
   hosts: all

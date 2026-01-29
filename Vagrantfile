@@ -73,7 +73,7 @@ Vagrant.configure("2") do |config|
     c.vm.provision :shell,
                    :name => "ANSIBLE provisioner",
                    :privileged => false,
-                   :inline => "sudo chown -R vagrant:vagrant /vagrant && source ansible-ee/bin/activate && cd /vagrant/ansible && ANSIBLE_CONFIG=config/vagrant/ansible.cfg bin/provision #{ENV['ANSIBLE_ARGS']}"
+                   :inline => "sudo ls -lR /vagrant && source ansible-ee/bin/activate && cd /vagrant/ansible && ANSIBLE_CONFIG=config/vagrant/ansible.cfg bin/provision #{ENV['ANSIBLE_ARGS']}"
   end
     
   config.vm.define :main do |main|

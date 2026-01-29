@@ -17,27 +17,31 @@
   hosts: target_hosts
   become: true
   tasks:
-    - name: Verifica se l'architettura i386 è già abilitata
+    - name: "Verify if i386 architecture is allready enabled"
       ansible.builtin.command: dpkg --print-foreign-architectures
       register: foreign_archs
       changed_when: false
-      check_mode: no
-    - name: Aggiunge architettura i386 (solo se manca)
+      check_mode: false
+    - name: "Add i386 architecture (if missing)"
       ansible.builtin.command: dpkg --add-architecture i386
       when: "'i386' not in foreign_archs.stdout_lines"
       become: true
-    - name: Aggiorna apt cache dopo aver aggiunto i386
+    - name: "Update apt cache"
       ansible.builtin.apt:
         update_cache: true
       when: ansible_facts['pkg_mgr'] == 'apt'
       become: true
-- name: Install syslinux multiarch for 32-bit boot support
-  ansible.builtin.apt:
-    name:
-      - syslinux:i386          # contains the actual 32-bit boot binaries: syslinux.bin, isolinux.bin, ldlinux.c32...
-      - syslinux-common        # shared files: menu.c32, vesamenu.c32, etc. (architecture-independent)
-      - mtools                 # needed to write to FAT filesystems from Linux
-      - parted
-    state: present
-    update_cache: true
+- name: "Install syslinux multiarch for 32-bit boot support"
+  tags: target
+  hosts: target_hosts
   become: true
+  tasks:
+    - ansible.builtin.apt:
+        name:
+          - syslinux:i386          # contains the actual 32-bit boot binaries: syslinux.bin, isolinux.bin, ldlinux.c32...
+          - syslinux-common        # shared files: menu.c32, vesamenu.c32, etc. (architecture-independent)
+          - mtools                 # needed to write to FAT filesystems from Linux
+          - parted
+        state: present
+        update_cache: true
+      become: true

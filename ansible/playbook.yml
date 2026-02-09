@@ -9,6 +9,7 @@
         path: "{{ item }}"
       loop:
         - /vagrant/.vagrant/machines/main/libvirt/private_key
+        - /home/vagrant/vagrant/.vagrant/machines/main/libvirt/private_key
       register: file_stat
     - ansible.builtin.debug:
         msg: |

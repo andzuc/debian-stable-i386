@@ -15,8 +15,7 @@ puts "DEBUG: ENV['INTNET'] = '#{ENV['INTNET']}'"
 
 Vagrant.configure("2") do |config|
   config.vm.define :controller do |c|
-    c.vm.synced_folder '.', '/vagrant', disabled: false, type: "rsync",
-                       rsync__args: ["--chown=vagrant:vagrant"]
+    c.vm.synced_folder '.', '/vagrant', disabled: false
 
     c.vm.provider :docker do |d|
       machine = machines["controller"]
@@ -74,7 +73,7 @@ Vagrant.configure("2") do |config|
     c.vm.provision :shell,
                    :name => "ANSIBLE provisioner",
                    :privileged => false,
-                   :inline => "source ansible-ee/bin/activate && cd /vagrant/ansible && ANSIBLE_CONFIG=config/vagrant/ansible.cfg bin/provision #{ENV['ANSIBLE_ARGS']}"
+                   :inline => "sudo cp -a /vagrant vagrant && sudo chown -R vagrant:vagrant vagrant && source ansible-ee/bin/activate && cd vagrant/ansible && ANSIBLE_CONFIG=config/vagrant/ansible.cfg bin/provision #{ENV['ANSIBLE_ARGS']}"
   end
     
   config.vm.define :main do |main|

@@ -8,4 +8,4 @@ vagrant up \
 	--no-parallel \
 	--no-provision
 vagrant rsync
-vagrant provision --debug
+vagrant provision

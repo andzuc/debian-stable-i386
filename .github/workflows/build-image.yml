@@ -60,8 +60,8 @@ jobs:
           screen -L -Logfile build.log -DmS build-image ./bin/provision &
           BUILDPID=$!
           tail --pid=$BUILDPID -f build.log
-          echo cat "${{ github.env }}"
-          cat "${{ github.env }}"
+          vagrant package main --output debian-stable-x86
+          ls -la
       # - name: Build QEMU image
       #   run: ./build-qemu
       # - name: Upload QEMU image

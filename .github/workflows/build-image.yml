@@ -60,7 +60,7 @@ jobs:
           screen -L -Logfile build.log -DmS build-image ./bin/provision &
           BUILDPID=$!
           tail --pid=$BUILDPID -f build.log
-          vagrant package main --output debian-stable-x86
+          VAGRANT_LIBVIRT_BOX_FORMAT_VERSION=v2 vagrant package main --output debian-stable-x86
           ls -la
       # - name: Build QEMU image
       #   run: ./build-qemu

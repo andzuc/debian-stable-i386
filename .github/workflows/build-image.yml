@@ -61,7 +61,7 @@ jobs:
           BUILDPID=$!
           tail --pid=$BUILDPID -f build.log
           ./bin/down
-          ./virt-utils/dump_disks main
+          ./virt-util/vagrant/build-vagrant "${{ env.REPO_NAME }}" $(./virt-utils/dump_disks main)
           ls -la
       # - name: Build QEMU image
       #   run: ./build-qemu

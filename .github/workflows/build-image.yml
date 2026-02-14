@@ -60,6 +60,7 @@ jobs:
           screen -L -Logfile build.log -DmS build-image ./bin/provision &
           BUILDPID=$!
           tail --pid=$BUILDPID -f build.log
+          ./bin/down
           export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
           VAGRANT_LIBVIRT_BOX_FORMAT_VERSION=v2 vagrant package main --output debian-stable-x86
           ls -la

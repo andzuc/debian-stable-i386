@@ -34,7 +34,7 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends \
           qemu-system-$(echo ${{ env.QEMU_ARCH }}|sed 's/_/-/') libvirt-daemon-system ebtables libguestfs-tools \
-          dnsmasq vagrant ruby-fog-libvirt virtinst qemu-utils libvirt-dev
+          dnsmasq vagrant ruby-fog-libvirt virtinst qemu-utils libvirt-dev xmlstarlet
           sudo usermod -a -G libvirt,kvm "$USER"
           id libvirt-qemu
           sudo setfacl -m u:libvirt-qemu:rwx /home/runner

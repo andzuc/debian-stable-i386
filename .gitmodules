@@ -1,0 +1,3 @@
+[submodule "virt-utils"]
+	path = virt-utils
+	url = git@github.com:andzuc/virt-utils.git

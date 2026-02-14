@@ -65,8 +65,7 @@ jobs:
         shell: sudo -s -u runner source {0}
         run: |
           id
-          sudo virt-utils/build-vagrant "${{ env.REPO_NAME }}" $(virt-utils/dump_disks main)
-          ls -la
+          sudo virt-utils/build-vagrant "${{ env.REPO_NAME }}" debian-stable-i386_main.img $(virt-utils/dump_disks main)
       # - name: Build QEMU image
       #   run: ./build-qemu
       # - name: Upload QEMU image

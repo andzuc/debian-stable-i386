@@ -61,11 +61,21 @@ jobs:
           BUILDPID=$!
           tail --pid=$BUILDPID -f build.log
           ./bin/down
+          IMAGE_VERSION=$(virt-utils/get-box-version "andreazuccherelli/debian-stable" build.log)
+          echo "IMAGE_VERSION=$IMAGE_VERSION"|tee -a "${{ github.env }}"
       - name: Build Vagrant box
         shell: sudo -s -u runner source {0}
         run: |
           id
           sudo virt-utils/build-vagrant "${{ env.REPO_NAME }}" debian-stable-i386_main.img $(virt-utils/dump_disks main)
+      - name: Upload VAGRANT image to Vagrant Cloud
+        env:
+          HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+          HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+          VAGRANT_USER: ${{ secrets.VAGRANT_USER }}
+          VAGRANT_ACCESS_TOKEN: ${{ secrets.VAGRANT_ACCESS_TOKEN }}
+        run: ./upload-vagrant ${{ env.IMAGE_VERSION }}
+
       # - name: Build QEMU image
       #   run: ./build-qemu
       # - name: Upload QEMU image
@@ -90,10 +100,3 @@ jobs:
       #   with:
       #     name: debian-stable-vagrant-${{ env.DEB_ARCH }}-md5
       #     path: image-vagrant/MD5SUMS
-      # - name: Upload VAGRANT image to Vagrant Cloud
-      #   env:
-      #     HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
-      #     HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
-      #     VAGRANT_USER: ${{ secrets.VAGRANT_USER }}
-      #     VAGRANT_ACCESS_TOKEN: ${{ secrets.VAGRANT_ACCESS_TOKEN }}
-      #   run: ./upload-vagrant ${{ env.IMAGE_VERSION }}

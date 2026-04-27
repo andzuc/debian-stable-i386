@@ -78,35 +78,3 @@ jobs:
           VAGRANT_USER: ${{ secrets.VAGRANT_USER }}
           VAGRANT_ACCESS_TOKEN: ${{ secrets.VAGRANT_ACCESS_TOKEN }}
         run: ./virt-utils/vagrant/upload ${{ env.IMAGE_VERSION }}
-      
-      # - name: Build QEMU image
-      #   run: ./build-qemu
-      # - name: Upload QEMU image
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: debian-stable-qemu-${{ env.DEB_ARCH }}
-      #     path: image-qemu/*
-      # - name: Upload QEMU MD5SUMS
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: debian-stable-qemu-${{ env.DEB_ARCH }}-md5
-      #     path: image-qemu/MD5SUMS
-      # - name: Build Vagrant image
-      #   run: ./build-vagrant
-      # - name: Upload VAGRANT image
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: debian-stable-vagrant-${{ env.DEB_ARCH }}
-      #     path: image-vagrant/*
-      # - name: Upload VAGRANT MD5SUMS
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: debian-stable-vagrant-${{ env.DEB_ARCH }}-md5
-      #     path: image-vagrant/MD5SUMS
-      # - name: Upload VAGRANT image to Vagrant Cloud
-      #   env:
-      #     HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
-      #     HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
-      #     VAGRANT_USER: ${{ secrets.VAGRANT_USER }}
-      #     VAGRANT_ACCESS_TOKEN: ${{ secrets.VAGRANT_ACCESS_TOKEN }}
-      #   run: ./upload-vagrant ${{ env.IMAGE_VERSION }}

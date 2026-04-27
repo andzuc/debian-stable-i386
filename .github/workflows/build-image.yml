@@ -5,8 +5,13 @@ on:
     tags:
       - '*'
   workflow_dispatch:
+    inputs:
+      base_image:
+        description: 'Vagrant base image'
+        required: true
 
 env:
+  BASE_IMAGE: ${{ github.event.inputs.base_image || vars.BASE_IMAGE }}
   QEMU_ARCH: 'x86_64'
   QEMU_MACH: 'q35'
   QEMU_CPU: 'qemu64'
@@ -66,6 +71,14 @@ jobs:
         run: |
           id
           sudo virt-utils/build-vagrant "${{ env.REPO_NAME }}" debian-stable-i386_main.img $(virt-utils/dump_disks main)
+      - name: Upload VAGRANT image to Vagrant Cloud
+        env:
+          HCP_CLIENT_ID: ${{ secrets.HCP_CLIENT_ID }}
+          HCP_CLIENT_SECRET: ${{ secrets.HCP_CLIENT_SECRET }}
+          VAGRANT_USER: ${{ secrets.VAGRANT_USER }}
+          VAGRANT_ACCESS_TOKEN: ${{ secrets.VAGRANT_ACCESS_TOKEN }}
+        run: ./virt-utils/vagrant/upload ${{ env.IMAGE_VERSION }}
+      
       # - name: Build QEMU image
       #   run: ./build-qemu
       # - name: Upload QEMU image

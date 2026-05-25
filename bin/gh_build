@@ -1,2 +1,4 @@
 #!/bin/bash
-gh workflow run build-image
+BRANCH="${1:-master}"
+
+gh workflow run build-image -r "${BRANCH}" -f base_image=13.4.2603110955292

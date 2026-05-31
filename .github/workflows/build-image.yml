@@ -67,7 +67,7 @@ jobs:
           tail --pid=$BUILDPID -f build.log
           ./bin/down
           IMAGE_VERSION=$(virt-utils/get-box-version "andreazuccherelli/debian-stable" build.log)
-          echo "IMAGE_VERSION=$IMAGE_VERSION"|tee -a "${{ github.env }}"
+          echo "IMAGE_VERSION=${IMAGE_VERSION}.${{ github.run_number }}"|tee -a "${{ github.env }}"
       - name: Build Vagrant box
         shell: sudo -s -u runner source {0}
         run: |

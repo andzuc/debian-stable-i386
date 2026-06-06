@@ -78,7 +78,6 @@ Vagrant.configure("2") do |config|
     
   config.vm.define :main do |main|
     machine = machines["main"]
-    main.ssh.insert_key = false
     main.vm.box = "andreazuccherelli/debian-stable"
     main.vm.box_architecture = "amd64"
     main.vm.hostname = machine["name"]

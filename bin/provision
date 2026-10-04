@@ -7,6 +7,7 @@ cd "${MYDIR}/.."
 vagrant up \
 	--no-parallel \
 	--no-provision
+virsh list --all
 virsh dumpxml debian-stable-i386_main
 vagrant rsync
 vagrant provision

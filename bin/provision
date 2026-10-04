@@ -7,7 +7,16 @@ cd "${MYDIR}/.."
 vagrant up \
 	--no-parallel \
 	--no-provision
-virsh list --all
-virsh dumpxml debian-stable-i386_main
+
+virsh -c qemu:///system list --all
+REAL_VM_NAME=$(virsh -c qemu:///system list --all --name | grep "debian" | head -n 1)
+if [ -n "$REAL_VM_NAME" ]; then
+  echo "Trovata VM Libvirt: $REAL_VM_NAME"
+  virsh -c qemu:///system dumpxml "$REAL_VM_NAME"
+  sudo cat /var/log/libvirt/qemu/${REAL_VM_NAME}.log
+else
+  echo "Nessuna VM libvirt trovata con quel nome."
+fi
+
 vagrant rsync
 vagrant provision

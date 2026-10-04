@@ -39,7 +39,7 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends \
           qemu-system-$(echo ${{ env.QEMU_ARCH }}|sed 's/_/-/') libvirt-daemon-system ebtables libguestfs-tools \
-          dnsmasq vagrant ruby-fog-libvirt virtinst qemu-utils libvirt-dev xmlstarlet
+          dnsmasq vagrant ruby-fog-libvirt virtinst qemu-utils libvirt-dev xmlstarlet cpu-checker
           sudo usermod -a -G libvirt,kvm "$USER"
           id libvirt-qemu
           sudo setfacl -m u:libvirt-qemu:rwx /home/runner
@@ -55,6 +55,14 @@ jobs:
           ip link ls
           echo "virsh net-list --all:"
           virsh net-list --all
+      - name: Verifica e sblocca KVM
+        run: |
+          # Verifica se l'accelerazione KVM è disponibile
+          if kvm-ok; then
+          echo "✅ KVM è supportato e attivo!"
+          else
+          echo "❌ KVM non è attivo, l'emulazione potrebbe essere lenta o fallire."
+          fi
       - name: Build image
         shell: sudo -s -u runner source {0}
         run: |
